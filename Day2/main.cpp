@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     std::string filename(argv[1]);
     std::ifstream in(filename);
     std::string line;
-    unsigned int succeeded = 0;
+    unsigned int sum = 0;
     while (std::getline(in, line))
     {
         size_t pos = line.find_first_of(":");
@@ -21,9 +21,9 @@ int main(int argc, char** argv)
             bool success = true;
             std::stringstream ss(line.substr(pos + 1)); // Remove "Game N:"
             std::string token;
+            unsigned int max_red = 0, max_green = 0, max_blue = 0;
             while (std::getline(ss, token, ';'))
             {
-                
                 std::stringstream ss2(token);
                 std::string token2;
                 while (std::getline(ss2, token2, ','))
@@ -35,30 +35,25 @@ int main(int argc, char** argv)
                         unsigned int count = std::stoi(token2.substr(0, pos));
                         std::string color = token2.substr(pos + 1); // +1 to remove space before color
 
-                        if (color == "red" && count > 12)
+                        if (color == "red" && count > max_red)
                         {
-                            success = false;
+                            max_red = count;
                         }
-                        if (color == "green" && count > 13)
+                        if (color == "green" && count > max_green)
                         {
-                            success = false;
+                            max_green = count;
                         }
-                        if (color == "blue" && count > 14)
+                        if (color == "blue" && count > max_blue)
                         {
-                            success = false;
+                            max_blue = count;
                         }
                     }
                 }
             }
-
-            if (success)
-            {
-                succeeded += game_num;
-            }
+            sum += max_red * max_green * max_blue;
         }
     }
-
-    std::cout << "success count: " << succeeded << std::endl;
+    std::cout << "sum: " << sum << std::endl;
 
     return 0;
 }
